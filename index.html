@@ -1,0 +1,205 @@
+<html>
+  <head>
+    <title>Rocket Runner</title>
+    <style>
+      html, body{
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+#Game{
+    border: 3px solid #d3d3d3;
+    background-color: #222;
+}
+    </style>
+  </head>
+  <body>
+    <canvas id="Game" width="400" height="400"></canvas>
+    <script>
+      var canvas = document.getElementById("Game");
+var ctx = canvas.getContext("2d");
+var score = 0;
+var is_game_over = false;
+var speed_level = 1;
+
+function random_range(min, max){
+	return Math.floor(Math.random() * (max - min)) + min;
+}
+
+var Player = {
+  pos: {
+    x: 30,
+    y: (canvas.height / 2)
+  },
+  avatar: new Image(),
+  gameOver: function() {
+    is_game_over = true;
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "#fff";
+    ctx.fillText("GAME OVER.", (canvas.width / 4), (canvas.height / 2));
+    ctx.fillText("Press (Space) to Continue.", 20, (canvas.height / 2) + 30);
+        document.addEventListener('keydown', function(e) {
+      if (e.keyCode === 32 && is_game_over == true) {
+        reset();
+      }
+    });
+  }
+};
+
+Player.avatar.src = "http://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/18e5c8c55771aa4.png";
+
+Player.move = function(e) {
+  var dis = 30;
+  if (e == "up") {
+    Player.pos.y -= dis;
+  }
+  if (e == "down") {
+    Player.pos.y += dis;
+  }
+};
+
+Player.moveUp = function() {
+  Player.move("up");
+};
+
+Player.moveDown = function() {
+  Player.move("down");
+};
+
+function obstacle(x, y, width, height, avatar) {
+  this.x = x;
+  this.y = y;
+  this.width = width;
+  this.height = height;
+  this.avatar = avatar;
+  this.crashWith = function() {
+    var myleft = this.x;
+    var myright = this.x + (this.width);
+    var mytop = this.y;
+    var mybottom = this.y + (this.height);
+    var otherleft = Player.pos.x;
+    var otherright = Player.pos.x + (68);
+    var othertop = Player.pos.y;
+    var otherbottom = Player.pos.y + (38);
+    var crash = true;
+    if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+      crash = false;
+    }
+    return crash;
+  };
+  this.draw = function() {
+    ctx.drawImage(this.avatar, this.x, this.y, this.width, this.height);
+  };
+}
+
+var obstacleMetImage = new Image();
+obstacleMetImage.src = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ea231e53-e17c-4265-83b5-552457fc0505/d8uejr1-6fa24e3b-d69b-4764-b47a-5a19d1ca1970.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2VhMjMxZTUzLWUxN2MtNDI2NS04M2I1LTU1MjQ1N2ZjMDUwNVwvZDh1ZWpyMS02ZmEyNGUzYi1kNjliLTQ3NjQtYjQ3YS01YTE5ZDFjYTE5NzAucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.AbPfSKZBqtZV1DYH5F0jSwo-miFDXjAQDtIR2PddJjk";
+
+var obstacleMeteorImage = new Image();
+obstacleMeteorImage.src = "http://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/b0d28fcc8a7f281.png";
+
+var stararr = [];
+var metarr = [];
+
+function genStar(){
+	var star = new obstacle(350, random_range(30, 300), 29, 27.5, obstacleMetImage);
+  stararr.push(star);
+}
+
+function genMeteor(){
+	var meteor = new obstacle(350, random_range(30, 300), 60, 45, obstacleMeteorImage);
+  metarr.push(meteor);
+}
+
+document.addEventListener('keydown', function(e) {
+  if ((e.keyCode === 87 || e.keyCode === 38) && Player.pos.y > 30) {
+    Player.moveUp();
+  }
+  if ((e.keyCode === 83 || e.keyCode === 40) && Player.pos.y < 340) {
+    Player.moveDown();
+  }
+});
+
+Player.draw = function(x, y, c) {
+  if (c == 1) {
+    ctx.drawImage(Player.avatar, Player.pos.x, Player.pos.y, 66, 38);
+  }
+  if (c == 0) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+};
+
+function scoreDraw() {
+  ctx.font = "30px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.fillText("Score: " + score, 20, 50);
+}
+
+function clearFrame() {
+  Player.draw(Player.pos.x, Player.pos.y, 0);
+}
+
+// Update game 60 times in 1 second while still running efficiently
+function updatePlayer() {
+  if (is_game_over == false) {
+    clearFrame();
+    scoreDraw();
+    Player.draw(Player.pos.x, Player.pos.y, 1);
+    for (let i = 0; i < stararr.length; i++) {
+      if(i < 5){
+      	stararr[i].draw();
+        stararr[i].x -= 2 * speed_level;
+      }
+      if(stararr[i].x < -30){
+      	stararr.shift();
+      }
+      if(stararr[i].crashWith()){
+      	stararr.shift();
+        score += 1;
+      }
+    }
+    for (let i = 0; i < metarr.length; i++) {
+      if(i < 5){
+      	metarr[i].draw();
+        metarr[i].x -= 2 * speed_level;
+      }
+      if(metarr[i].x < -30){
+      	metarr.shift();
+      }
+      if(metarr[i].crashWith()){
+      	metarr.shift();
+        Player.gameOver();
+      }
+    }
+  }
+}
+
+var interval_update = setInterval(updatePlayer, 20);
+var star_update = setInterval(genStar, 1000);
+var meteor_update = setInterval(genMeteor, 2000);
+var speed_update = setInterval(speedLevelIncrease, 10000)
+
+function reset(){
+	clearInterval(interval_update);
+  clearInterval(star_update);
+  clearInterval(meteor_update);
+  clearInterval(speed_update);
+  speed_level = 1;
+	score = 0;
+  stararr = [];
+  metarr = [];
+  Player.pos.y = (canvas.height) / 2;
+  is_game_over = false;
+  interval_update = setInterval(updatePlayer, 20);
+	star_update = setInterval(genStar, 1000 / (speed_level * 3));
+  meteor_update = setInterval(genMeteor, 2000 / (speed_level * 3));
+  speed_update = setInterval(speedLevelIncrease, 10000);
+}
+
+function speedLevelIncrease(){
+	speed_level += 0.5;
+}
+    </script>
+  </body>
+</html>
