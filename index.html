@@ -47,7 +47,7 @@ var Player = {
   }
 };
 
-Player.avatar.src = "http://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/18e5c8c55771aa4.png";
+Player.avatar.src = "https://raw.githubusercontent.com/notJudahRR/rocket-runner/main/rocket.png";
 
 Player.move = function(e) {
   var dis = 30;
@@ -79,9 +79,9 @@ function obstacle(x, y, width, height, avatar) {
     var mytop = this.y;
     var mybottom = this.y + (this.height);
     var otherleft = Player.pos.x;
-    var otherright = Player.pos.x + (68);
+    var otherright = Player.pos.x + (56);
     var othertop = Player.pos.y;
-    var otherbottom = Player.pos.y + (38);
+    var otherbottom = Player.pos.y + (24);
     var crash = true;
     if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
       crash = false;
@@ -94,21 +94,21 @@ function obstacle(x, y, width, height, avatar) {
 }
 
 var obstacleMetImage = new Image();
-obstacleMetImage.src = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ea231e53-e17c-4265-83b5-552457fc0505/d8uejr1-6fa24e3b-d69b-4764-b47a-5a19d1ca1970.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2VhMjMxZTUzLWUxN2MtNDI2NS04M2I1LTU1MjQ1N2ZjMDUwNVwvZDh1ZWpyMS02ZmEyNGUzYi1kNjliLTQ3NjQtYjQ3YS01YTE5ZDFjYTE5NzAucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.AbPfSKZBqtZV1DYH5F0jSwo-miFDXjAQDtIR2PddJjk";
+obstacleMetImage.src = "https://raw.githubusercontent.com/notJudahRR/rocket-runner/main/star.png";
 
 var obstacleMeteorImage = new Image();
-obstacleMeteorImage.src = "http://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/b0d28fcc8a7f281.png";
+obstacleMeteorImage.src = "https://raw.githubusercontent.com/notJudahRR/rocket-runner/main/rock.png";
 
 var stararr = [];
 var metarr = [];
 
 function genStar(){
-	var star = new obstacle(350, random_range(30, 300), 29, 27.5, obstacleMetImage);
+	var star = new obstacle(350, random_range(30, 300), 26, 22, obstacleMetImage);
   stararr.push(star);
 }
 
 function genMeteor(){
-	var meteor = new obstacle(350, random_range(30, 300), 60, 45, obstacleMeteorImage);
+	var meteor = new obstacle(350, random_range(30, 300), 26, 22, obstacleMeteorImage);
   metarr.push(meteor);
 }
 
@@ -123,7 +123,7 @@ document.addEventListener('keydown', function(e) {
 
 Player.draw = function(x, y, c) {
   if (c == 1) {
-    ctx.drawImage(Player.avatar, Player.pos.x, Player.pos.y, 66, 38);
+    ctx.drawImage(Player.avatar, Player.pos.x, Player.pos.y, 56, 24);
   }
   if (c == 0) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
