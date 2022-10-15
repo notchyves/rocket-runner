@@ -3,7 +3,7 @@
     <title>Rocket Runner</title>
 	  <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
     <style>
       html, body{
@@ -39,9 +39,12 @@ var Player = {
   avatar: new Image(),
   gameOver: function() {
     is_game_over = true;
-    ctx.font = "30px Arial";
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.font = "30px 'Press Start 2P'";
     ctx.fillStyle = "#fff";
-    ctx.fillText("GAME OVER.", (canvas.width / 4), (canvas.height / 2));
+    ctx.fillText("GAME OVER!", (canvas.width / 8), (canvas.height / 2));
+    ctx.font = "14px 'Press Start 2P'";
     ctx.fillText("Press (Space) to Continue.", 20, (canvas.height / 2) + 30);
         document.addEventListener('keydown', function(e) {
       if (e.keyCode === 32 && is_game_over == true) {
@@ -135,9 +138,9 @@ Player.draw = function(x, y, c) {
 };
 
 function scoreDraw() {
-  ctx.font = "30px Arial";
+  ctx.font = "16px 'Press Start 2P'";
   ctx.fillStyle = "#fff";
-  ctx.fillText("Score: " + score, 20, 50);
+  ctx.fillText("Score: " + score, 20, 40);
 }
 
 function clearFrame() {
